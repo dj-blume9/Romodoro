@@ -3,7 +3,7 @@ use std::{env, fs, path::PathBuf};
 pub fn ensure_global_install() -> bool {
     let exe_path = env::current_exe().expect("Failed to determine executable path.");
 
-    #[cfg(target_os = "windows")]
+    #[cfg(target_family = "windows")]
     {
        use std::process::Command;  
         let home_dir =
@@ -31,7 +31,7 @@ pub fn ensure_global_install() -> bool {
         return true;
     }
 
-    #[cfg(target_os = "linux")]
+    #[cfg(target_family = "unix")]
     {
         let local_bin_dir = PathBuf::from(env::var("HOME").unwrap()).join(".local/bin");
         let global_exe_path = local_bin_dir.join("romo");
@@ -57,7 +57,7 @@ pub fn ensure_global_install() -> bool {
     }
 }
 
-#[cfg(target_os = "windows")]
+#[cfg(target_family = "windows")]
 fn add_to_path_windows(user_bin_dir: &PathBuf) {
     
     use std::process::Command;
@@ -79,7 +79,7 @@ fn add_to_path_windows(user_bin_dir: &PathBuf) {
         .expect("Failed to add Romo to PATH on Windows.");
 }
 
-#[cfg(target_os = "linux")]
+#[cfg(target_family = "unix")]
 fn add_to_path_linux(local_bin_dir: &PathBuf) {
     let path_to_add = local_bin_dir.to_str().unwrap();
 
